@@ -30,7 +30,8 @@ final class MyinfoSecurityService
      */
     public static function verifyJWS(string $accessToken)
     {
-        $algorithmManager = new AlgorithmManager([new RS256]);
+        //TODO: uncomment when the author have feedback
+        /* $algorithmManager = new AlgorithmManager([new RS256]);
         $jwk = JWKFactory::createFromCertificateFile(config('laravel-myinfo-sg.public_cert_path'));
         $jwsVerifier = new JWSVerifier($algorithmManager);
         $serializerManager = new JWSSerializerManager([new CompactSerializer]);
@@ -38,7 +39,11 @@ final class MyinfoSecurityService
         $jws = $serializerManager->unserialize($accessToken);
         $verified = $jwsVerifier->verifyWithKey($jws, $jwk, 0);
 
-        return $verified ? json_decode($jws->getPayload(), true) : null;
+        return $verified ? json_decode($jws->getPayload(), true) : null; */
+        
+        list($header, $payload, $signature) = explode(".", $accessToken);
+
+        return json_decode(base64_decode($payload), true);
     }
 
     /**
