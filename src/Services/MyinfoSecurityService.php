@@ -133,10 +133,11 @@ final class MyinfoSecurityService
      */
     public static function decryptJWE(string $personDataToken, string $privateKeyPath)
     {
-        $jwk = JWKFactory::createFromKeyFile(
-            $privateKeyPath,
-            config('laravel-myinfo-sg.client_secret')
-        );
+        $jwk = JWKFactory::createFromKey(env('MYINFO_APP_SIGNATURE_CERT_PRIVATE_KEY'), config('laravel-myinfo-sg.client_secret'));
+        // $jwk = JWKFactory::createFromKeyFile(
+        //     $privateKeyPath,
+        //     config('laravel-myinfo-sg.client_secret')
+        // );
 
         $serializerManager = new JWESerializerManager([
             new \Jose\Component\Encryption\Serializer\CompactSerializer(),
