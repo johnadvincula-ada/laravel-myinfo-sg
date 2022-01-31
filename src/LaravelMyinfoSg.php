@@ -164,7 +164,7 @@ class LaravelMyinfoSg
 
                 $personDataJWS = MyInfoSecurityService::decryptJWE(
                     $personData,
-                    storage_path(config('laravel-myinfo-sg.private_key_path'))
+                    'file://' . storage_path(config('laravel-myinfo-sg.private_key_path'))
                 );
 
                 if ($personDataJWS === null) {
