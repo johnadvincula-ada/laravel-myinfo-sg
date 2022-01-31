@@ -106,6 +106,7 @@ final class MyinfoSecurityService
             Log::debug('Base String (Pre Signing): '.$baseString);
         }
 
+        info('file://' . storage_path(config('laravel-myinfo-sg.private_key_path')));
         $privateKey = openssl_pkey_get_private('file://' . storage_path(config('laravel-myinfo-sg.private_key_path')), $passphrase);
 
         openssl_sign($baseString, $signature, $privateKey, 'sha256WithRSAEncryption');
