@@ -55,6 +55,8 @@ class LaravelMyinfoSg
 
         if ($tokenRequestResponseBody) {
             $decoded = json_decode($tokenRequestResponseBody, true);
+            
+            logger('decoded', $decoded);
 
             if ($decoded) {
                 return $this->callPersonAPI($decoded['access_token']);
