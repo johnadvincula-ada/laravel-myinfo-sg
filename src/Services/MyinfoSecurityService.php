@@ -30,6 +30,7 @@ final class MyinfoSecurityService
      */
     public static function verifyJWS(string $accessToken)
     {
+        logger('verifying jws');
         $algorithmManager = new AlgorithmManager([new RS256]);
         $jwk = JWKFactory::createFromCertificate(env('MYINFO_SIGNATURE_CERT_PUBLIC_CERT'));
         // $jwk = JWKFactory::createFromCertificateFile('file:/' . storage_path(config('laravel-myinfo-sg.public_cert_path')));
@@ -38,7 +39,7 @@ final class MyinfoSecurityService
 
         $jws = $serializerManager->unserialize($accessToken);
         $verified = $jwsVerifier->verifyWithKey($jws, $jwk, 0);
-        info('info', json_decode($jws->getPayload(), true));
+        logger('payload', json_decode($jws->getPayload(), true));
         return $verified ? json_decode($jws->getPayload(), true) : null;
     }
 
