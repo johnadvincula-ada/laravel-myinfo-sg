@@ -50,7 +50,7 @@ class LaravelMyinfoSg
     public function getMyinfoPersonData(string $code)
     {
         $tokenRequestResponse = $this->createTokenRequest($code);
-
+        Log::debug('decoded', $tokenRequestResponseBody);
         $tokenRequestResponseBody = $tokenRequestResponse->getBody();
 
         if ($tokenRequestResponseBody) {
@@ -151,6 +151,8 @@ class LaravelMyinfoSg
         $personRequestResponse = $this->createPersonRequest($sub, $accessToken);
         $personRequestResponseBody = $personRequestResponse->getBody();
         $personRequestResponseContent = $personRequestResponseBody->getContents();
+        
+        Log::debug('content: ' . $personRequestResponseContent);
 
         if ($personRequestResponseContent) {
             $personData = json_decode($personRequestResponseContent, true);
