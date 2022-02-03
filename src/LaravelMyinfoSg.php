@@ -49,6 +49,7 @@ class LaravelMyinfoSg
      */
     public function getMyinfoPersonData(string $code)
     {
+        Log::debug('--decoding--');
         $tokenRequestResponse = $this->createTokenRequest($code);
         Log::debug('decoded', $tokenRequestResponseBody);
         $tokenRequestResponseBody = $tokenRequestResponse->getBody();
