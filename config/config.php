@@ -11,8 +11,8 @@ return [
     'attributes_array' => explode(',', env('MYINFO_APP_ATTRIBUTES', 'uinfin,name,sex,race,nationality,dob,email,mobileno,regadd,housingtype,hdbtype,marital,noa-basic,ownerprivate,cpfcontributions,cpfbalances')),
     'purpose'       => env('MYINFO_APP_PURPOSE', 'demonstrating MyInfo APIs'),
 
-    'public_cert_path' => env('MYINFO_SIGNATURE_CERT_PUBLIC_CERT'),
-    'private_key_path' => env('MYINFO_APP_SIGNATURE_CERT_PRIVATE_KEY'),
+    'public_cert' => env('MYINFO_SIGNATURE_CERT_PUBLIC_CERT'),
+    'private_key' => env('MYINFO_APP_SIGNATURE_CERT_PRIVATE_KEY'),
 
     'auth_level'        => env('MYINFO_AUTH_LEVEL'),
     'api_authorise_url' => env('MYINFO_API_AUTHORISE'),
