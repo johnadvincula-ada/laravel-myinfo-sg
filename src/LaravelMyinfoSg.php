@@ -49,16 +49,12 @@ class LaravelMyinfoSg
      */
     public function getMyinfoPersonData(string $code)
     {
-        Log::debug('--decoding--');
         $tokenRequestResponse = $this->createTokenRequest($code);
-        Log::debug('decoded', $tokenRequestResponseBody);
         $tokenRequestResponseBody = $tokenRequestResponse->getBody();
 
         if ($tokenRequestResponseBody) {
             $decoded = json_decode($tokenRequestResponseBody, true);
             
-            logger('decoded', $decoded);
-
             if ($decoded) {
                 return $this->callPersonAPI($decoded['access_token']);
             }
@@ -153,8 +149,6 @@ class LaravelMyinfoSg
         $personRequestResponseBody = $personRequestResponse->getBody();
         $personRequestResponseContent = $personRequestResponseBody->getContents();
         
-        Log::debug('content: ' . $personRequestResponseContent);
-
         if ($personRequestResponseContent) {
             $personData = json_decode($personRequestResponseContent, true);
 
@@ -169,7 +163,7 @@ class LaravelMyinfoSg
 
                 $personDataJWS = MyInfoSecurityService::decryptJWE(
                     $personData,
-                    'file://' . storage_path(config('laravel-myinfo-sg.private_key_path'))
+                    config('laravel-myinfo-sg.private_key')
                 );
 
                 if ($personDataJWS === null) {
