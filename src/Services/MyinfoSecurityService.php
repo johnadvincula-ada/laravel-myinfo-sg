@@ -30,16 +30,14 @@ final class MyinfoSecurityService
      */
     public static function verifyJWS(string $accessToken)
     {
-        logger('verifying jws');
         $algorithmManager = new AlgorithmManager([new RS256]);
-        $jwk = JWKFactory::createFromCertificate(env('MYINFO_SIGNATURE_CERT_PUBLIC_CERT'));
-        // $jwk = JWKFactory::createFromCertificateFile('file:/' . storage_path(config('laravel-myinfo-sg.public_cert_path')));
+        $jwk = JWKFactory::createFromCertificate(config('laravel-myinfo-sg.public_cert'));
         $jwsVerifier = new JWSVerifier($algorithmManager);
         $serializerManager = new JWSSerializerManager([new CompactSerializer]);
 
         $jws = $serializerManager->unserialize($accessToken);
         $verified = $jwsVerifier->verifyWithKey($jws, $jwk, 0);
-        logger('payload', json_decode($jws->getPayload(), true));
+
         return $verified ? json_decode($jws->getPayload(), true) : null;
     }
 
@@ -108,9 +106,7 @@ final class MyinfoSecurityService
             Log::debug('Base String (Pre Signing): '.$baseString);
         }
 
-        logger('file:/' . storage_path(config('laravel-myinfo-sg.private_key_path')));
-        $privateKey = openssl_pkey_get_private(env('MYINFO_APP_SIGNATURE_CERT_PRIVATE_KEY'), $passphrase);
-        // $privateKey = openssl_pkey_get_private('file:/' . storage_path(config('laravel-myinfo-sg.private_key_path')), $passphrase);
+        $privateKey = openssl_pkey_get_private(config('laravel-myinfo-sg.private_key'), $passphrase);
 
         openssl_sign($baseString, $signature, $privateKey, 'sha256WithRSAEncryption');
 
@@ -128,17 +124,13 @@ final class MyinfoSecurityService
 
     /**
      * @param string $personDataToken
-     * @param string $privateKeyPath
+     * @param string $privateKey
      * @return string
      * @throws \Exception
      */
-    public static function decryptJWE(string $personDataToken, string $privateKeyPath)
+    public static function decryptJWE(string $personDataToken, string $privateKey)
     {
-        $jwk = JWKFactory::createFromKey(env('MYINFO_APP_SIGNATURE_CERT_PRIVATE_KEY'), config('laravel-myinfo-sg.client_secret'));
-        // $jwk = JWKFactory::createFromKeyFile(
-        //     $privateKeyPath,
-        //     config('laravel-myinfo-sg.client_secret')
-        // );
+        $jwk = JWKFactory::createFromKey($privateKey, config('laravel-myinfo-sg.client_secret'));
 
         $serializerManager = new JWESerializerManager([
             new \Jose\Component\Encryption\Serializer\CompactSerializer(),
